@@ -1,7 +1,15 @@
 Rails.application.routes.draw do
-  resources :posts
-  resources :comments
-  resources :categories
+  mount RailsAdmin::Engine => '/categories/admin', as: 'rails_admin'
+  root :to => 'categories#index'
+  resources :categories do
+    resources :posts
+  end
+  resources :posts do 
+    resources :comments
+  end
+  get 'crawl' => 'categories#crawl'
+  get '/apis/:id', to: 'categories#generate_json', as: 'apis'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

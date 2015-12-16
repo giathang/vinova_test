@@ -1,0 +1,5 @@
+<% if @comment.save %>
+  alert("Success!");
+<% else %>
+  $('#error-div').html('<%= j(render :partial => 'shared/error_messages', :object => @course) %>');
+<% end %>

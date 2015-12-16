@@ -102,6 +102,24 @@ class CategoriesController < ApplicationController
     end
   end
 
+  def generate_json
+    @category = Category.find(params[:id])
+    @posts = @category.posts
+
+    @post_nodes = Array.new()
+    @comment_nodes = Array.new()
+    @posts.each do |post|
+      @comments = post.comments
+      @comments.each do |comment|
+        c_node = {post_id: comment.post_id,name: comment.name,body: comment.body}
+        @comment_nodes << c_node
+      end
+      p_node = {category_id: post.category_id,name: post.title,point: post.point,image_url: post.image_url,comments: @comment_nodes}
+      @post_nodes << p_node
+    end
+    @node = {name: @category.name,posts: @post_nodes}
+    @json_data = @node.to_json
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

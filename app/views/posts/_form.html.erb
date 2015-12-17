@@ -1,33 +1,70 @@
-<%= form_for(@post) do |f| %>
-  <% if @post.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
-
-      <ul>
-      <% @post.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+<div class="masthead">
+   <div class="container">
+     <nav class="nav">
+     <% if category_id==0 %>
+       <%= link_to 'Home', categories_path, html_options = { :class=>"nav-item active"} %>
+      <% else %>
+        <%= link_to 'Home', categories_path, html_options = { :class=>"nav-item"} %>
       <% end %>
-      </ul>
-    </div>
-  <% end %>
 
-  <div class="field">
-    <%= f.label :category_id %><br>
-    <%= f.number_field :category_id %>
-  </div>
-  <div class="field">
-    <%= f.label :point %><br>
-    <%= f.number_field :point %>
-  </div>
-  <div class="field">
-    <%= f.label :title %><br>
-    <%= f.text_field :title %>
-  </div>
-  <div class="field">
-    <%= f.label :image_url %><br>
-    <%= f.text_field :image_url %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+      <% categories_list.each do |category| %>
+        <% if category.id == category_id %>
+          <%= link_to category.name, category, html_options = { :class=>"nav-item active"} %>
+        <% else %>
+          <%= link_to category.name, category, html_options = { :class=>"nav-item"} %>
+        <% end %>
+      <% end %>
+      
+      <% if category_id==0 %>
+        <%= link_to "Admin", "categories/admin", html_options = { :class=>"nav-item"} %>
+       <% else %>
+        <%= link_to "Admin", "admin", html_options = { :class=>"nav-item"} %>
+       <% end %>
+
+       <div class="btn-group">
+         <a class="btn dropdown-toggle nav-item" data-toggle="dropdown" href="#">APIs <span class="caret"></span></a>
+         <ul class="dropdown-menu">
+           <% categories_list.each do |category| %>
+             <li><%= link_to category.name, apis_path(category) %></li>
+           <% end %>
+         </ul>
+       </div>
+
+     </nav>
+   </div>
+ </div>
+
+ <div class="container">
+   <div class="row">
+
+     <div class="col-sm-8 main">
+         <div class="post">
+           <h2 class="post-title">
+            <%= link_to post.title, post %>
+           </h2> 
+           <p class="post-meta"><%= post.created_at %></p>
+           <p class="post-meta"> <%= post.point %> points</p>
+           <p class="post-meta"><%= post.comments.size %> comments</p>
+
+           <p><%= image_tag post.image_url,alt: "#" ,size: "380x330" %></p>
+         </div>
+
+         <h2>Comments</h2>
+         <div class="row marketing">
+         <div class="col-lg-6">
+          <% @post.comments.each do |comment| %>
+           <%= div_for comment do %>
+            <h4><%= comment.name %></h4>
+            <p><%= comment.body %></p>
+            <p>Posted <%= time_ago_in_words(comment.created_at) %></p>
+           <% end %>
+          <% end %>
+          </div>
+         </div>
+
+
+     </div>
+    
+
+   </div>
+ </div>

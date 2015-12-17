@@ -1,25 +1,61 @@
-<%= form_for(@category) do |f| %>
-  <% if @category.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@category.errors.count, "error") %> prohibited this category from being saved:</h2>
-
-      <ul>
-      <% @category.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+<div class="masthead">
+   <div class="container">
+     <nav class="nav">
+     <% if category_id==0 %>
+       <%= link_to 'Home', categories_path, html_options = { :class=>"nav-item active"} %>
+      <% else %>
+        <%= link_to 'Home', categories_path, html_options = { :class=>"nav-item"} %>
       <% end %>
-      </ul>
-    </div>
-  <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :is_crawl %><br>
-    <%= f.text_field :is_crawl %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+      <% categories_list.each do |category| %>
+        <% if category.id == category_id %>
+          <%= link_to category.name, category, html_options = { :class=>"nav-item active"} %>
+        <% else %>
+          <%= link_to category.name, category, html_options = { :class=>"nav-item"} %>
+        <% end %>
+      <% end %>
+      
+      <% if category_id==0 %>
+        <%= link_to "Admin", "categories/admin", html_options = { :class=>"nav-item"} %>
+       <% else %>
+        <%= link_to "Admin", "admin", html_options = { :class=>"nav-item"} %>
+       <% end %>
+
+      <div class="btn-group">
+        <a class="btn dropdown-toggle blog-nav-item" data-toggle="dropdown" href="#">APIs <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <% categories_list.each do |category| %>
+            <li><%= link_to category.name, apis_path(category) %></li>
+          <% end %>
+        </ul>
+      </div>
+
+     </nav>
+   </div>
+ </div>
+
+ <div class="container">
+
+   
+
+   <div class="row">
+
+     <div class="col-sm-8 main">
+       <% posts.each do |post| %>
+         <div class="post">
+           <h2 class="post-title">
+            <%= link_to post.title, post %>
+           </h2> 
+           <p class="post-meta"><%= post.created_at %> <%= post.point %> points</p>
+
+           <p><%= image_tag(post.image_url, :alt => "#", :size => "380x330") %></p>
+         </div>
+       <% end %>
+
+       <%= will_paginate posts, renderer: BootstrapPagination::Rails %>
+
+     </div>
+
+   </div>
+
+ </div>
